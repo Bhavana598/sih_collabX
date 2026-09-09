@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>COLLABX — Citizen Dashboard</title>
+<title>Samyog — Citizen Dashboard</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:#f5f7fb;color:#172033}
@@ -52,7 +52,7 @@ textarea{min-height:110px;resize:vertical}
 <body>
 <div class="portal">
 <aside class="side">
-  <div class="logo">COLLABX</div>
+  <div class="logo">Samyog</div>
   <div class="tag">Community → Collaborative Innovation Platform</div>
   <div class="nav">
     <button class="active" onclick="showSection('dashboard',this)">🏠 Dashboard</button>
@@ -189,7 +189,7 @@ function notifications(){
  ["Your road drainage report was validated","The local authority accepted your report and will review the next steps.","Today","NEW"],
  ["A solution was recommended for your irrigation report","Smart Irrigation is available as a possible solution.","Yesterday","NEW"],
  ["Your school water report is now in progress","A project team has started working on the problem.","2 days ago","READ"],
- ["Welcome to COLLABX","You can report local problems and track what happens next.","5 days ago","READ"]
+ ["Welcome to Samyog","You can report local problems and track what happens next.","5 days ago","READ"]
  ].map(n=>`<div class="row"><span><b>${n[0]}</b><br><small class="muted">${n[1]}</small><br><small class="muted">${n[2]}</small></span><span class="badge ${n[3]==='NEW'?'orange':''}">${n[3]}</span></div>`).join('')}
  </div>`;
 }
