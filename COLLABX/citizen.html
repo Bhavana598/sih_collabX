@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>COLLABX — Citizen Dashboard</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:#f5f7fb;color:#172033}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.portal{min-height:100vh;display:flex}
+.side{width:245px;background:#101828;color:#fff;padding:22px 14px;position:fixed;inset:0 auto 0 0}
+.logo{font-size:24px;font-weight:850;padding:0 12px}
+.tag{font-size:11px;color:#98a2b3;padding:5px 12px 22px;line-height:1.4}
+.nav button{display:block;width:100%;border:0;background:transparent;color:#cbd5e1;text-align:left;padding:11px 12px;border-radius:8px;margin:3px 0}
+.nav button.active,.nav button:hover{background:#1d2939;color:#fff}
+.user{position:absolute;bottom:15px;left:14px;right:14px;background:#182230;border:1px solid #293548;border-radius:9px;padding:12px;font-size:12px}
+.user small{color:#98a2b3}.user button{width:100%;margin-top:9px;padding:8px;border:1px solid #344054;background:transparent;color:#fff;border-radius:7px}
+.main{margin-left:245px;width:calc(100% - 245px)}
+header{height:66px;background:#fff;border-bottom:1px solid #e5e9f0;padding:0 30px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+.content{padding:30px;max-width:1400px;margin:auto}
+.head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:22px}
+h1{margin:0 0 6px;font-size:27px}h2{font-size:18px;margin:0 0 13px}h3{font-size:15px;margin:0 0 7px}
+.muted{color:#667085}.help{font-size:13px;color:#667085;line-height:1.5}
+.btn{padding:10px 15px;border-radius:8px;border:1px solid #d9dee8;background:#fff;font-weight:700}
+.primary{background:#2457d6;color:#fff;border-color:#2457d6}
+.card{background:#fff;border:1px solid #e3e8ef;border-radius:11px;padding:18px;box-shadow:0 7px 22px rgba(16,24,40,.04);margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.metric small{color:#667085}.metric strong{display:block;font-size:27px;margin:8px 0}
+.two{display:grid;grid-template-columns:1.25fr .75fr;gap:18px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:13px 0;border-bottom:1px solid #e5e9f0}
+.row:last-child{border-bottom:0}
+.badge{background:#eef2ff;color:#3547a6;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:750;white-space:nowrap}
+.badge.green{background:#ecfdf3;color:#067647}.badge.orange{background:#fff7ed;color:#b54708}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{margin-bottom:15px}.field.full{grid-column:1/-1}
+label{display:block;font-size:12px;font-weight:750;margin-bottom:7px}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid #d9dee8;border-radius:8px;background:#fff;color:#172033}
+textarea{min-height:110px;resize:vertical}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:5px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}.filters input,.filters select{width:auto;min-width:180px}
+.empty{text-align:center;padding:30px;color:#667085}
+.solution{border:1px solid #e3e8ef;border-radius:9px;padding:15px;margin:10px 0}
+.notice{padding:12px 14px;background:#f7f9fc;border-radius:8px;margin-bottom:14px;font-size:13px}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.check{display:flex;gap:9px;align-items:center;font-size:13px;margin:9px 0}.check input{width:auto}
+@media(max-width:900px){.grid{grid-template-columns:1fr 1fr}.two,.profile-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.portal{display:block}.side{position:static;width:100%}.main{margin:0;width:100%}.user{position:static;margin-top:20px}.grid,.form-grid{grid-template-columns:1fr}.content{padding:16px}header{padding:0 16px}.filters input,.filters select{width:100%}}
+</style>
+</head>
+<body>
+<div class="portal">
+<aside class="side">
+  <div class="logo">COLLABX</div>
+  <div class="tag">Community → Collaborative Innovation Platform</div>
+  <div class="nav">
+    <button class="active" onclick="showSection('dashboard',this)">🏠 Dashboard</button>
+    <button onclick="showSection('report',this)">📝 Report a Problem</button>
+    <button onclick="showSection('reports',this)">📋 My Reports</button>
+    <button onclick="showSection('nearby',this)">📍 Nearby Problems</button>
+    <button onclick="showSection('solutions',this)">💡 Solutions</button>
+    <button onclick="showSection('notifications',this)">🔔 Notifications</button>
+    <button onclick="showSection('profile',this)">👤 My Profile</button>
+  </div>
+  <div class="user">
+    <small>LOGGED IN AS</small><br><b>Citizen</b>
+    <button onclick="logout()">Sign out</button>
+  </div>
+</aside>
+
+<main class="main">
+<header>
+  <span>Citizen / <b id="crumb">Dashboard</b></span>
+  <button class="btn primary" onclick="showSection('report',document.querySelectorAll('.nav button')[1])">+ Report a Problem</button>
+</header>
+
+<div class="content" id="content"></div>
+</main>
+</div>
+
+<script>
+const reportsData=[
+ {title:"Farm irrigation problem",location:"Gumla",category:"Agriculture",status:"Under Review",date:"08 Sep 2026",description:"Water supply is not reaching several farms."},
+ {title:"Village road drainage",location:"Gumla",category:"Infrastructure",status:"Validated",date:"02 Sep 2026",description:"Water collects on the road after rainfall."},
+ {title:"School water access",location:"Latehar",category:"Water",status:"In Progress",date:"28 Aug 2026",description:"The school needs a reliable drinking-water source."},
+ {title:"Street light not working",location:"Ranchi",category:"Public Safety",status:"Resolved",date:"20 Aug 2026",description:"Street lights were not working in the evening."}
+];
+
+function esc(v){return String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+function logout(){sessionStorage.clear();location.href='index.html';}
+function setActive(btn){document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');}
+function showSection(section,btn){
+ setActive(btn);
+ const names={dashboard:"Dashboard",report:"Report a Problem",reports:"My Reports",nearby:"Nearby Problems",solutions:"Solutions",notifications:"Notifications",profile:"My Profile"};
+ document.getElementById('crumb').textContent=names[section];
+ const views={dashboard,report,reports:reportsSection,nearby:nearbySection,solutions,notifications,profile};
+ document.getElementById('content').innerHTML=views[section]();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function dashboard(){
+ return `<div class="head"><div><h1>Welcome back 👋</h1><p class="muted">See your reports, nearby problems and useful solutions in one place.</p></div></div>
+ <div class="grid">
+  <div class="card metric"><small>My Reports</small><strong>6</strong><small>2 need attention</small></div>
+  <div class="card metric"><small>Validated</small><strong>3</strong><small>Accepted by authorities</small></div>
+  <div class="card metric"><small>In Progress</small><strong>2</strong><small>Being worked on</small></div>
+  <div class="card metric"><small>Solutions</small><strong>4</strong><small>Available for you</small></div>
+ </div>
+ <div class="two">
+  <div class="card"><h2>My Recent Reports</h2>
+   ${reportsData.slice(0,3).map(r=>`<div class="row"><span><b>${esc(r.title)}</b><br><small class="muted">${esc(r.location)} · ${esc(r.category)}</small></span><span class="badge">${esc(r.status)}</span></div>`).join('')}
+  </div>
+  <div class="card"><h2>What would you like to do?</h2><p class="help">Choose an action to get started.</p>
+   <div class="actions"><button class="btn primary" onclick="showSection('report',document.querySelectorAll('.nav button')[1])">Report a Problem</button>
+   <button class="btn" onclick="showSection('reports',document.querySelectorAll('.nav button')[2])">View My Reports</button>
+   <button class="btn" onclick="showSection('nearby',document.querySelectorAll('.nav button')[3])">See Nearby Problems</button></div>
+  </div>
+ </div>`;
+}
+
+function report(){
+ return `<div class="head"><div><h1>Report a Problem</h1><p class="muted">Tell us what is wrong. Keep it simple — you can add more details if you have them.</p></div></div>
+ <div class="notice">💡 <b>Tip:</b> Give a clear title, select the type of problem, and tell us where it happened.</div>
+ <div class="card"><form onsubmit="submitReport(event)">
+  <div class="form-grid">
+   <div class="field"><label>Problem title *</label><input id="rTitle" required placeholder="Example: Drinking water is not available"></div>
+   <div class="field"><label>Problem type *</label><select id="rCategory" required><option value="">Select a type</option><option>Water</option><option>Roads & Transport</option><option>Agriculture</option><option>Education</option><option>Healthcare</option><option>Electricity</option><option>Sanitation</option><option>Public Safety</option><option>Other</option></select></div>
+   <div class="field"><label>Location / Village / Area *</label><input id="rLocation" required placeholder="Example: ABC Village, District"></div>
+   <div class="field"><label>How serious is the problem?</label><select id="rSeverity"><option>Low — small issue</option><option selected>Medium — needs attention</option><option>High — urgent</option></select></div>
+   <div class="field full"><label>What is the problem? *</label><textarea id="rDescription" required placeholder="Explain what is happening, who is affected and how often it happens."></textarea></div>
+   <div class="field full"><label>Photo or evidence (optional)</label><input type="file" accept="image/*,.pdf"></div>
+  </div>
+  <div class="actions"><button class="btn primary">Submit Report</button><button type="reset" class="btn">Clear</button></div>
+ </form></div>`;
+}
+function submitReport(e){
+ e.preventDefault();
+ reportsData.unshift({title:document.getElementById('rTitle').value,category:document.getElementById('rCategory').value,location:document.getElementById('rLocation').value,status:"Submitted",date:"Today",description:document.getElementById('rDescription').value});
+ alert("Your report was submitted successfully. You can track it under 'My Reports'.");
+ showSection('reports',document.querySelectorAll('.nav button')[2]);
+}
+
+function reportsViewRows(list){
+ if(!list.length)return `<div class="empty">No reports match your search.</div>`;
+ return list.map((r,i)=>`<div class="row"><span><b>${esc(r.title)}</b><br><small class="muted">${esc(r.location)} · ${esc(r.category)} · ${esc(r.date)}</small><br><small>${esc(r.description)}</small></span><span class="badge ${r.status==='Resolved'?'green':r.status==='In Progress'?'orange':''}">${esc(r.status)}</span></div>`).join('');
+}
+function reportsSection(){
+ return `<div class="head"><div><h1>My Reports</h1><p class="muted">Track every problem you have submitted.</p></div></div>
+ <div class="card"><div class="filters"><input id="reportSearch" placeholder="Search your reports..." oninput="filterReports()">
+ <select id="reportStatus" onchange="filterReports()"><option>All statuses</option><option>Submitted</option><option>Under Review</option><option>Validated</option><option>In Progress</option><option>Resolved</option></select></div>
+ <div id="reportList">${reportsViewRows(reportsData)}</div></div>`;
+}
+function filterReports(){
+ const q=document.getElementById('reportSearch').value.toLowerCase(),s=document.getElementById('reportStatus').value;
+ const list=reportsData.filter(r=>(!q||(r.title+r.location+r.category+r.description).toLowerCase().includes(q))&&(s==='All statuses'||r.status===s));
+ document.getElementById('reportList').innerHTML=reportsViewRows(list);
+}
+
+const nearbyData=[
+ ["Broken handpump","Gumla","Water","1.2 km","Validated"],
+ ["Road damage near school","Gumla","Roads & Transport","2.4 km","Under Review"],
+ ["Waste collection issue","Ranchi","Sanitation","4.1 km","In Progress"],
+ ["Street lighting gap","Ranchi","Public Safety","5.0 km","Validated"]
+];
+function nearbySection(){
+ return `<div class="head"><div><h1>Nearby Problems</h1><p class="muted">See problems reported around your selected area.</p></div></div>
+ <div class="card"><div class="filters"><input placeholder="Search by area or problem..." oninput="filterNearby(this.value)">
+ <select onchange="filterNearby(document.querySelector('.filters input').value,this.value)"><option value="">All types</option><option>Water</option><option>Roads & Transport</option><option>Sanitation</option><option>Public Safety</option></select></div>
+ <div id="nearbyList">${nearbyRows(nearbyData)}</div></div>`;
+}
+function nearbyRows(list){return list.map(x=>`<div class="row"><span><b>${esc(x[0])}</b><br><small class="muted">${esc(x[1])} · ${esc(x[2])}</small></span><span><span class="badge">${esc(x[3])}</span> <span class="badge">${esc(x[4])}</span></span></div>`).join('');}
+function filterNearby(q="",type=""){
+ q=q.toLowerCase();const list=nearbyData.filter(x=>(!q||(x[0]+x[1]+x[2]).toLowerCase().includes(q))&&(!type||x[2]===type));
+ document.getElementById('nearbyList').innerHTML=nearbyRows(list)||'<div class="empty">No nearby problems found.</div>';
+}
+
+function solutions(){
+ return `<div class="head"><div><h1>Solutions</h1><p class="muted">Useful ideas and projects that may help solve problems in your area.</p></div></div>
+ <div class="card"><div class="solution"><h3>💧 Community Water Monitoring</h3><p class="help">Low-cost sensors can help communities monitor water availability and quality.</p><span class="badge">Water · Recommended</span><div class="actions"><button class="btn primary" onclick="alert('Demo: You showed interest in this solution.')">I’m Interested</button><button class="btn" onclick="alert('Demo solution details')">View Details</button></div></div>
+ <div class="solution"><h3>🌱 Smart Irrigation</h3><p class="help">A simple irrigation system can reduce water waste and improve farm productivity.</p><span class="badge">Agriculture · Recommended</span><div class="actions"><button class="btn primary" onclick="alert('Demo: You showed interest in this solution.')">I’m Interested</button><button class="btn" onclick="alert('Demo solution details')">View Details</button></div></div>
+ <div class="solution"><h3>☀️ Solar Microgrid</h3><p class="help">Shared solar power can improve reliable electricity access for communities.</p><span class="badge">Energy</span><div class="actions"><button class="btn primary" onclick="alert('Demo: You showed interest in this solution.')">I’m Interested</button><button class="btn" onclick="alert('Demo solution details')">View Details</button></div></div></div>`;
+}
+
+function notifications(){
+ return `<div class="head"><div><h1>Notifications</h1><p class="muted">Important updates about your reports and nearby activity.</p></div><button class="btn" onclick="alert('All notifications marked as read')">Mark all as read</button></div>
+ <div class="card">
+ ${[
+ ["Your road drainage report was validated","The local authority accepted your report and will review the next steps.","Today","NEW"],
+ ["A solution was recommended for your irrigation report","Smart Irrigation is available as a possible solution.","Yesterday","NEW"],
+ ["Your school water report is now in progress","A project team has started working on the problem.","2 days ago","READ"],
+ ["Welcome to COLLABX","You can report local problems and track what happens next.","5 days ago","READ"]
+ ].map(n=>`<div class="row"><span><b>${n[0]}</b><br><small class="muted">${n[1]}</small><br><small class="muted">${n[2]}</small></span><span class="badge ${n[3]==='NEW'?'orange':''}">${n[3]}</span></div>`).join('')}
+ </div>`;
+}
+
+function profile(){
+ return `<div class="head"><div><h1>My Profile</h1><p class="muted">Keep your basic information up to date so the platform can show relevant local information.</p></div></div>
+ <div class="card"><form onsubmit="event.preventDefault();alert('Profile saved successfully.')">
+ <div class="profile-grid">
+  <div class="field"><label>Full name</label><input value="Demo Citizen"></div>
+  <div class="field"><label>Email</label><input type="email" value="citizen@example.com"></div>
+  <div class="field"><label>Phone number</label><input value="+91 90000 00000"></div>
+  <div class="field"><label>District</label><input value="Gumla"></div>
+  <div class="field"><label>Village / Area</label><input value="Demo Village"></div>
+  <div class="field"><label>Preferred language</label><select><option>English</option><option>Hindi</option><option>Telugu</option></select></div>
+ </div>
+ <h3 style="margin-top:10px">Notifications</h3>
+ <label class="check"><input type="checkbox" checked> Tell me when my report status changes</label>
+ <label class="check"><input type="checkbox" checked> Show useful solutions near me</label>
+ <div class="actions"><button class="btn primary">Save Changes</button></div>
+ </form></div>`;
+}
+
+showSection('dashboard',document.querySelector('.nav button'));
+</script>
+</body>
+</html>

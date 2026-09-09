@@ -1,0 +1,23 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>COLLABX — University</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#f5f7fb;font-family:Inter,Segoe UI,Arial,sans-serif;color:#172033}
+.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.box{width:min(470px,100%);background:#fff;border:1px solid #e2e7ef;border-radius:17px;padding:35px;box-shadow:0 18px 50px rgba(16,24,40,.09)}
+.brand{font-size:27px;font-weight:850}.muted{color:#667085}
+.role{margin:24px 0;padding:15px;background:#f7f9fc;border-radius:10px}
+.role small{color:#667085;font-size:11px}.role h2{margin:6px 0 0}
+.field{margin:14px 0}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:7px}
+input{width:100%;padding:12px;border:1px solid #d9dee8;border-radius:8px}
+.btn{width:100%;padding:12px;border-radius:8px;border:1px solid #d9dee8;background:#fff;font-weight:750;margin-top:11px}
+.primary{background:#2457d6;color:#fff;border-color:#2457d6}
+.back{text-align:center;margin-top:16px;color:#667085;font-size:12px;cursor:pointer}
+.box{width:min(850px,100%)}.roles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:25px}.role-card{display:flex;flex-direction:column;gap:9px;text-align:left;padding:22px;border:1px solid #dfe5ee;border-radius:11px;background:#fff;cursor:pointer}.role-card:hover{border-color:#2457d6;box-shadow:0 6px 18px rgba(16,24,40,.08)}.icon{font-size:30px}.role-card small{color:#667085;line-height:1.45}@media(max-width:650px){.roles{grid-template-columns:1fr}}</style></head>
+<body><div class="wrap"><div class="box"><div class="brand">COLLABX</div><h1>University Portal</h1>
+<p class="muted">Choose the university account type. Only after selection will the matching Login / Sign Up page open.</p>
+<div class="roles">
+<button class="role-card" onclick="go('university-admin')"><span class="icon">🎓</span><b>University Admin</b><small>Manage challenges, projects, teams, faculty and university settings.</small></button>
+<button class="role-card" onclick="go('faculty')"><span class="icon">👨‍🏫</span><b>Faculty</b><small>Mentor projects, guide teams and track milestones.</small></button>
+<button class="role-card" onclick="go('student')"><span class="icon">👨‍🎓</span><b>Student</b><small>Discover projects, join teams and complete milestones.</small></button>
+</div><button class="btn" style="margin-top:25px" onclick="location.href='index.html'">← Back to Roles</button>
+</div></div><script>function go(r){location.href='university-login.html?role='+encodeURIComponent(r)}</script></body></html>

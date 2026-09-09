@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>COLLABX — Student Dashboard</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:#f5f7fb;color:#172033}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.portal{min-height:100vh;display:flex}
+.side{width:250px;background:#101828;color:#fff;padding:22px 14px;position:fixed;inset:0 auto 0 0;overflow-y:auto}
+.logo{font-size:24px;font-weight:850;padding:0 12px}.tag{font-size:11px;color:#98a2b3;padding:5px 12px 25px}
+.nav button{display:block;width:100%;border:0;background:transparent;color:#cbd5e1;text-align:left;padding:11px 12px;border-radius:8px;margin:3px 0}
+.nav button.active,.nav button:hover{background:#1d2939;color:#fff}
+.user{position:absolute;bottom:15px;left:14px;right:14px;background:#182230;border:1px solid #293548;border-radius:9px;padding:12px;font-size:12px}
+.user small{color:#98a2b3}.user button{width:100%;margin-top:9px;padding:7px;border:1px solid #344054;background:transparent;color:#fff;border-radius:7px}
+.main{margin-left:250px;width:calc(100% - 250px)}
+header{height:66px;background:#fff;border-bottom:1px solid #e5e9f0;padding:0 30px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+.content{padding:30px;max-width:1400px;margin:auto}.head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:22px}
+h1{margin:0 0 5px;font-size:27px}h2{font-size:18px;margin-top:0}h3{font-size:15px}.muted{color:#667085}
+.btn{padding:10px 15px;border-radius:8px;border:1px solid #d9dee8;background:#fff;font-weight:700}.primary{background:#2457d6;color:#fff;border-color:#2457d6}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.card{background:#fff;border:1px solid #e3e8ef;border-radius:11px;padding:18px;box-shadow:0 7px 22px rgba(16,24,40,.04)}
+.metric small{color:#667085}.metric strong{display:block;font-size:27px;margin:8px 0}
+.two{display:grid;grid-template-columns:1.25fr .75fr;gap:18px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:13px 0;border-bottom:1px solid #e5e9f0}.row:last-child{border-bottom:0}
+.badge{background:#eef2ff;color:#3547a6;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:750;white-space:nowrap}
+.badge.green{background:#ecfdf3;color:#067647}.badge.orange{background:#fff7ed;color:#b54708}
+.quick{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}.quick button{padding:11px;border:1px solid #dfe5ee;background:#fff;border-radius:8px;text-align:left;font-weight:650}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}.toolbar input,.toolbar select{padding:10px;border:1px solid #d9dee8;border-radius:8px;background:#fff;min-width:180px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;padding:10px;border:1px solid #d9dee8;border-radius:8px;background:#fff}.field textarea{min-height:90px;resize:vertical}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.progress{height:8px;background:#edf0f5;border-radius:10px;overflow:hidden;margin-top:8px}.progress span{display:block;height:100%;background:#2457d6}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:12px 9px;border-bottom:1px solid #e5e9f0}th{font-size:11px;color:#667085;text-transform:uppercase}
+.notice{padding:12px;border-radius:8px;background:#f7f9fc;border:1px solid #e3e8ef;margin-bottom:12px}
+@media(max-width:900px){.grid{grid-template-columns:1fr 1fr}.two,.form-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.portal{display:block}.side{position:static;width:100%;min-height:auto}.main{margin:0;width:100%}.user{position:static;margin-top:20px}.grid{grid-template-columns:1fr}.content{padding:16px}header{padding:0 16px}}
+</style>
+</head>
+<body>
+<div class="portal">
+<aside class="side">
+<div class="logo">COLLABX</div><div class="tag">Community → Collaborative Innovation</div>
+<div class="nav">
+<button class="active" onclick="showSection(this,'Dashboard')">Dashboard</button>
+<button onclick="showSection(this,'Available Projects')">Available Projects</button>
+<button onclick="showSection(this,'My Projects')">My Projects</button>
+<button onclick="showSection(this,'My Team')">My Team</button>
+<button onclick="showSection(this,'Milestones')">Milestones</button>
+<button onclick="showSection(this,'Profile')">Profile</button>
+</div>
+<div class="user"><small>LOGGED IN AS</small><br><b>Student</b><button onclick="logout()">Sign out</button></div>
+</aside>
+
+<main class="main">
+<header><span>Student / <b id="crumb">Dashboard</b></span><button class="btn primary" onclick="primaryAction()">Quick Action</button></header>
+<div class="content" id="content"></div>
+</main>
+</div>
+
+<script>
+const sections={
+"Dashboard":`
+<div class="head"><div><h1>Student Dashboard</h1><p class="muted">See projects that match your skills, your team work and upcoming tasks.</p></div></div>
+<div class="grid">
+<div class="card metric"><small>Available Projects</small><strong>18</strong><small>Matched to your skills</small></div>
+<div class="card metric"><small>My Projects</small><strong>2</strong><small>Active</small></div>
+<div class="card metric"><small>Team Members</small><strong>5</strong><small>Across your projects</small></div>
+<div class="card metric"><small>Milestones</small><strong>7</strong><small>2 due soon</small></div>
+</div>
+<div class="two">
+<div class="card"><h2>Recommended for You</h2>
+<div class="row"><span><b>Smart Irrigation Monitoring</b><br><small class="muted">IoT + Agriculture · 94% match</small></span><span class="badge">OPEN</span></div>
+<div class="row"><span><b>Water Quality Monitor</b><br><small class="muted">Sensors + ML · 88% match</small></span><span class="badge">OPEN</span></div>
+<div class="row"><span><b>Solar Microgrid</b><br><small class="muted">Electronics · 81% match</small></span><span class="badge green">ACTIVE</span></div>
+</div>
+<div class="card"><h2>Quick Access</h2><p class="muted">Start with the task you need.</p>
+<div class="quick"><button onclick="showByName('Available Projects')">🔎 Find Projects</button><button onclick="showByName('My Projects')">📁 My Projects</button><button onclick="showByName('My Team')">👥 My Team</button><button onclick="showByName('Milestones')">✓ My Tasks</button></div></div>
+</div>`,
+
+"Available Projects":`
+<div class="head"><div><h1>Available Projects</h1><p class="muted">Find projects and join one that matches your interests and skills.</p></div></div>
+<div class="card"><div class="toolbar"><input id="projectSearch" placeholder="Search by project name or skill" oninput="filterProjects()"><select id="projectDomain" onchange="filterProjects()"><option value="">All domains</option><option>Agriculture</option><option>Water</option><option>Energy</option><option>Healthcare</option></select><select id="projectType" onchange="filterProjects()"><option value="">All types</option><option>Join Team</option><option>Individual</option></select></div>
+<div id="projectList">
+<div class="notice project-item" data-text="Smart Irrigation Monitoring IoT Agriculture Join Team"><b>Smart Irrigation Monitoring</b><br><small class="muted">Agriculture · IoT · Team of 4 · 94% skill match</small><div class="actions"><button class="btn primary" onclick="applyProject('Smart Irrigation Monitoring')">Request to Join</button><button class="btn" onclick="viewProject('Smart Irrigation Monitoring')">View Details</button></div></div>
+<div class="notice project-item" data-text="Water Quality Monitor Sensors ML Water Join Team"><b>Water Quality Monitor</b><br><small class="muted">Water · Sensors + ML · Team of 3 · 88% skill match</small><div class="actions"><button class="btn primary" onclick="applyProject('Water Quality Monitor')">Request to Join</button><button class="btn" onclick="viewProject('Water Quality Monitor')">View Details</button></div></div>
+<div class="notice project-item" data-text="Solar Microgrid Electronics Energy Individual"><b>Solar Microgrid Reliability</b><br><small class="muted">Energy · Electronics · Team of 5 · 81% skill match</small><div class="actions"><button class="btn primary" onclick="applyProject('Solar Microgrid Reliability')">Request to Join</button><button class="btn" onclick="viewProject('Solar Microgrid Reliability')">View Details</button></div></div>
+</div></div>`,
+
+"My Projects":`
+<div class="head"><div><h1>My Projects</h1><p class="muted">Track the projects you have joined and your contribution.</p></div></div>
+<div class="card"><div class="row"><span><b>Smart Irrigation Monitoring</b><br><small class="muted">Team: AquaTech · Faculty mentor: Dr. Meera</small><div class="progress"><span style="width:68%"></span></div><small class="muted">68% complete</small></span><span class="badge">IN PROGRESS</span></div>
+<div class="row"><span><b>Water Quality Monitor</b><br><small class="muted">Team: CleanFlow · Faculty mentor: Prof. Rao</small><div class="progress"><span style="width:42%"></span></div><small class="muted">42% complete</small></span><span class="badge orange">TESTING</span></div>
+<div class="actions"><button class="btn primary" onclick="alert('Project workspace opened in demo mode.')">Open Project Workspace</button><button class="btn" onclick="alert('Demo: project report form opened.')">Submit Project Update</button></div></div>`,
+
+"My Team":`
+<div class="head"><div><h1>My Team</h1><p class="muted">See your teammates, responsibilities and communication options.</p></div></div>
+<div class="two"><div class="card"><h2>AquaTech Team</h2>
+<div class="row"><span><b>You — Bhavana</b><br><small class="muted">Machine Learning</small></span><span class="badge green">YOU</span></div>
+<div class="row"><span><b>Hamsa</b><br><small class="muted">Machine Learning</small></span><span class="badge">MEMBER</span></div>
+<div class="row"><span><b>Chandana</b><br><small class="muted">Backend Development</small></span><span class="badge">MEMBER</span></div>
+<div class="row"><span><b>Gopika</b><br><small class="muted">UI / Research</small></span><span class="badge">MEMBER</span></div>
+<div class="row"><span><b>Shaveta</b><br><small class="muted">UI / Research</small></span><span class="badge">MEMBER</span></div>
+<div class="row"><span><b>Hasini</b><br><small class="muted">IoT / Hardware</small></span><span class="badge">MEMBER</span></div>
+
+<div class="actions"><button class="btn primary" onclick="alert('Demo team message opened.')">Message Team</button><button class="btn" onclick="alert('Demo: invite teammate')">Invite Teammate</button></div></div>
+<div class="card"><h2>Team Information</h2><p><b>Faculty Mentor</b><br><span class="muted">Mr. Naresh Koenni and Mr. Naga Sriharsha</span></p><p><b>Project</b><br><span class="muted">Smart Irrigation Monitoring</span></p><p><b>Next Meeting</b><br><span class="muted">Friday · 4:00 PM</span></p></div></div>`,
+
+"Milestones":`
+<div class="head"><div><h1>Milestones</h1><p class="muted">Your assigned tasks, deadlines and submission status.</p></div><button class="btn primary" onclick="alert('Demo: Add progress update')">Add Progress Update</button></div>
+<div class="card"><table><thead><tr><th>Task</th><th>Project</th><th>Due</th><th>Status</th><th>Action</th></tr></thead><tbody>
+<tr><td><b>Sensor prototype</b><br><small class="muted">Build first working unit</small></td><td>Smart Irrigation</td><td>12 Sep</td><td><span class="badge orange">DUE SOON</span></td><td><button class="btn" onclick="alert('Demo: upload work')">Submit</button></td></tr>
+<tr><td><b>Test data collection</b><br><small class="muted">Collect field readings</small></td><td>Smart Irrigation</td><td>18 Sep</td><td><span class="badge">PENDING</span></td><td><button class="btn" onclick="alert('Demo: milestone opened')">Open</button></td></tr>
+<tr><td><b>Model validation</b><br><small class="muted">Check ML accuracy</small></td><td>Water Quality</td><td>22 Sep</td><td><span class="badge green">ON TRACK</span></td><td><button class="btn" onclick="alert('Demo: milestone opened')">Open</button></td></tr>
+</tbody></table></div>`,
+
+"Profile":`
+<div class="head"><div><h1>My Profile</h1><p class="muted">Keep your student information and skills up to date so projects can match you better.</p></div></div>
+<div class="card"><div class="form-grid">
+<div class="field"><label>Full Name</label><input value="Bhavana"></div>
+<div class="field"><label>Student ID</label><input value="STU-2026-1042" readonly></div>
+<div class="field"><label>University</label><input value="COLLABX University"></div>
+<div class="field"><label>Course / Department</label><input value="B.Tech — Computer Science"></div>
+<div class="field"><label>Email</label><input type="email" value="bhavana@example.edu"></div>
+<div class="field"><label>Year of Study</label><select><option>1st Year</option><option>2nd Year</option><option selected>3rd Year</option><option>4th Year</option></select></div>
+<div class="field"><label>Skills</label><input value="Java, IoT, Python, SQL"></div>
+<div class="field"><label>Interests</label><input value="Agriculture, AI, Smart Cities"></div>
+</div><div class="field" style="margin-top:14px"><label>About Me</label><textarea>I enjoy building practical technology solutions for community problems.</textarea></div>
+<div class="actions"><button class="btn primary" onclick="saveProfile()">Save Changes</button><button class="btn" onclick="alert('Demo resume upload')">Upload Resume</button></div></div>`
+};
+
+function render(name){
+document.getElementById('crumb').textContent=name;
+document.getElementById('content').innerHTML=sections[name]||sections.Dashboard;
+}
+function showSection(btn,name){
+document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));
+btn.classList.add('active'); render(name);
+}
+function showByName(name){
+document.querySelectorAll('.nav button').forEach(x=>{x.classList.toggle('active',x.textContent.trim()===name)});
+render(name);
+}
+function applyProject(name){alert('Demo: your request to join "'+name+'" has been submitted.');}
+function viewProject(name){alert('Demo details: '+name+'\\nYou can view the problem, required skills, mentor and team before joining.');}
+function saveProfile(){alert('Profile saved successfully in demo mode.');}
+function filterProjects(){
+const q=(document.getElementById('projectSearch')?.value||'').toLowerCase();
+document.querySelectorAll('.project-item').forEach(x=>x.style.display=x.dataset.text.toLowerCase().includes(q)?'block':'none');
+}
+function primaryAction(){alert('Demo: Open your next pending milestone.');}
+function logout(){sessionStorage.clear();location.href='index.html';}
+render('Dashboard');
+</script>
+</body>
+</html>

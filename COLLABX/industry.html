@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>COLLABX — Industry Dashboard</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:#f5f7fb;color:#172033}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.portal{min-height:100vh;display:flex}
+.side{width:250px;background:#101828;color:#fff;padding:22px 14px;position:fixed;inset:0 auto 0 0}
+.logo{font-size:24px;font-weight:850;padding:0 12px}.tag{font-size:11px;color:#98a2b3;padding:5px 12px 25px;line-height:1.4}
+.nav button{display:block;width:100%;border:0;background:transparent;color:#cbd5e1;text-align:left;padding:10px 12px;border-radius:8px;margin:2px 0}
+.nav button.active,.nav button:hover{background:#1d2939;color:#fff}
+.user{position:absolute;bottom:15px;left:14px;right:14px;background:#182230;border:1px solid #293548;border-radius:9px;padding:12px;font-size:12px}
+.user small{color:#98a2b3}.user button{width:100%;margin-top:9px;padding:8px;border:1px solid #344054;background:transparent;color:#fff;border-radius:7px}
+.main{margin-left:250px;width:calc(100% - 250px)}
+header{height:66px;background:#fff;border-bottom:1px solid #e5e9f0;padding:0 30px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+.content{padding:30px;max-width:1450px;margin:auto}
+.head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:22px}
+h1{margin:0 0 6px;font-size:27px}h2{font-size:18px;margin:0 0 13px}h3{font-size:15px;margin:0 0 7px}
+.muted{color:#667085}.help{font-size:13px;color:#667085;line-height:1.5}
+.btn{padding:10px 15px;border-radius:8px;border:1px solid #d9dee8;background:#fff;font-weight:700}
+.primary{background:#2457d6;color:#fff;border-color:#2457d6}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.card{background:#fff;border:1px solid #e3e8ef;border-radius:11px;padding:18px;box-shadow:0 7px 22px rgba(16,24,40,.04);margin-bottom:16px}
+.metric small{color:#667085}.metric strong{display:block;font-size:27px;margin:8px 0}
+.two{display:grid;grid-template-columns:1.25fr .75fr;gap:18px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:13px 0;border-bottom:1px solid #e5e9f0}
+.row:last-child{border-bottom:0}
+.badge{background:#eef2ff;color:#3547a6;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:750;white-space:nowrap}
+.badge.green{background:#ecfdf3;color:#067647}.badge.orange{background:#fff7ed;color:#b54708}.badge.red{background:#fef3f2;color:#b42318}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{margin-bottom:15px}.field.full{grid-column:1/-1}
+label{display:block;font-size:12px;font-weight:750;margin-bottom:7px}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid #d9dee8;border-radius:8px;background:#fff;color:#172033}
+textarea{min-height:100px;resize:vertical}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:7px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}.filters input,.filters select{width:auto;min-width:180px}
+.notice{padding:12px 14px;background:#f7f9fc;border-radius:8px;margin-bottom:14px;font-size:13px;line-height:1.5}
+.progress{height:8px;background:#edf0f5;border-radius:99px;overflow:hidden;margin-top:8px}.progress span{display:block;height:100%;background:#2457d6}
+.progress-row{margin:15px 0}.progress-row>div{display:flex;justify-content:space-between;font-size:12px}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.check{display:flex;gap:9px;align-items:center;font-size:13px;margin:9px 0}.check input{width:auto}
+.small-btn{padding:7px 10px;font-size:12px}
+.capabilities{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.cap{font-size:11px;padding:5px 8px;border:1px solid #dfe5ee;border-radius:999px;background:#f8fafc}
+@media(max-width:900px){.grid{grid-template-columns:1fr 1fr}.two,.profile-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.portal{display:block}.side{position:static;width:100%}.main{margin:0;width:100%}.user{position:static;margin-top:20px}.grid,.form-grid{grid-template-columns:1fr}.content{padding:16px}header{padding:0 16px}.filters input,.filters select{width:100%}}
+</style>
+</head>
+<body>
+<div class="portal">
+<aside class="side">
+<div class="logo">COLLABX</div>
+<div class="tag">Community → Collaborative Innovation</div>
+<div class="nav">
+<button class="active" onclick="showSection('dashboard',this)">🏠 Dashboard</button>
+<button onclick="showSection('opportunities',this)">🔎 Opportunities</button>
+<button onclick="showSection('recommended',this)">💡 Recommended Projects</button>
+<button onclick="showSection('collaborations',this)">🤝 Collaborations</button>
+<button onclick="showSection('mentorship',this)">🎓 Mentorship</button>
+<button onclick="showSection('funding',this)">💰 Funding</button>
+<button onclick="showSection('profile',this)">👤 My Profile</button>
+</div>
+<div class="user"><small>LOGGED IN AS</small><br><b>Industry</b><button onclick="logout()">Sign out</button></div>
+</aside>
+
+<main class="main">
+<header>
+<span>Industry / <b id="crumb">Dashboard</b></span>
+<button class="btn primary" onclick="showSection('opportunities',document.querySelectorAll('.nav button')[1])">Find Opportunities</button>
+</header>
+<div class="content" id="content"></div>
+</main>
+</div>
+
+<script>
+const opportunities=[
+{name:"Smart Water Monitoring",category:"Water",district:"Latehar",match:93,need:"Technology + Mentorship",deadline:"20 Sep 2026",status:"Open"},
+{name:"Solar Microgrid Reliability",category:"Energy",district:"Simdega",match:91,need:"Technology + Pilot",deadline:"25 Sep 2026",status:"Open"},
+{name:"Farm Irrigation System",category:"Agriculture",district:"Gumla",match:89,need:"Pilot + Funding",deadline:"30 Sep 2026",status:"Open"},
+{name:"Waste Collection Improvement",category:"Sanitation",district:"Ranchi",match:82,need:"Implementation Partner",deadline:"05 Oct 2026",status:"Open"}
+];
+
+const projects=[
+{name:"Smart Water Monitoring",university:"Demo University",district:"Latehar",stage:"Prototype",progress:72,match:93,need:"Technology + Mentorship"},
+{name:"Solar Microgrid Reliability",university:"State Technical University",district:"Simdega",stage:"Testing",progress:61,match:91,need:"Technology + Pilot"},
+{name:"Farm Irrigation System",university:"Demo University",district:"Gumla",stage:"Pilot",progress:38,match:89,need:"Pilot + Funding"},
+{name:"School Water Quality Monitor",university:"District Innovation College",district:"Latehar",stage:"Prototype",progress:44,match:78,need:"Equipment + Mentorship"}
+];
+
+const collaborations=[
+{name:"Solar Microgrid Reliability",partner:"State Technical University",role:"Technology Partner",status:"Active",next:"Field testing",date:"18 Sep 2026"},
+{name:"Smart Water Monitoring",partner:"Demo University",role:"Mentorship",status:"Active",next:"Prototype review",date:"15 Sep 2026"},
+{name:"Farm Irrigation System",partner:"Demo University",role:"Pilot Support",status:"Pending",next:"Confirm pilot scope",date:"22 Sep 2026"}
+];
+
+const mentors=[
+{name:"Dr. Ananya Rao",area:"Water Technology",teams:2,status:"Active",next:"Prototype review"},
+{name:"Rahul Mehta",area:"IoT & Sensors",teams:3,status:"Active",next:"Technical session"},
+{name:"Priya Shah",area:"Business & Deployment",teams:1,status:"Available",next:"Not scheduled"}
+];
+
+const funding=[
+{name:"Farm Irrigation System",type:"Pilot Grant",amount:"₹5L",stage:"Proposal",deadline:"30 Sep 2026",status:"Under Review"},
+{name:"Smart Water Monitoring",type:"Technology Support",amount:"₹3L",stage:"Committed",deadline:"20 Sep 2026",status:"Approved"},
+{name:"Solar Microgrid Reliability",type:"Pilot Funding",amount:"₹10L",stage:"Commitment",deadline:"25 Sep 2026",status:"Approved"}
+];
+
+function logout(){sessionStorage.clear();location.href="index.html";}
+
+function showSection(section,btn){
+document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));
+if(btn)btn.classList.add("active");
+const names={dashboard:"Dashboard",opportunities:"Opportunities",recommended:"Recommended Projects",collaborations:"Collaborations",mentorship:"Mentorship",funding:"Funding",profile:"My Profile"};
+document.getElementById("crumb").textContent=names[section];
+const views={dashboard:dashboardSection,opportunities:opportunitiesSection,recommended:recommendedSection,collaborations:collaborationsSection,mentorship:mentorshipSection,funding:fundingSection,profile:profileSection};
+document.getElementById("content").innerHTML=views[section]();
+window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function dashboardSection(){
+return `<div class="head"><div><h1>Industry Dashboard</h1><p class="muted">Find practical innovation opportunities and contribute technology, mentorship, pilots or funding.</p></div></div>
+<div class="grid">
+<div class="card metric"><small>Matched Projects</small><strong>9</strong><small>Based on your capabilities</small></div>
+<div class="card metric"><small>Active Collaborations</small><strong>4</strong><small>2 pilots in progress</small></div>
+<div class="card metric"><small>Mentorship</small><strong>7</strong><small>Sessions / teams</small></div>
+<div class="card metric"><small>Funding Offered</small><strong>₹18L</strong><small>Current commitments</small></div>
+</div>
+<div class="two">
+<div class="card"><h2>Best Matches</h2>
+${opportunities.slice(0,3).map(x=>`<div class="row"><span><b>${x.name}</b><br><small class="muted">${x.district} · ${x.category} · ${x.need}</small></span><span class="badge green">${x.match}% match</span></div>`).join("")}
+</div>
+<div class="card"><h2>Quick Actions</h2><p class="help">Start with the task you want to do.</p>
+<div class="actions"><button class="btn primary" onclick="showSection('opportunities',document.querySelectorAll('.nav button')[1])">Find Projects</button>
+<button class="btn" onclick="showSection('recommended',document.querySelectorAll('.nav button')[2])">View Matches</button>
+<button class="btn" onclick="showSection('mentorship',document.querySelectorAll('.nav button')[4])">Offer Mentorship</button>
+<button class="btn" onclick="showSection('funding',document.querySelectorAll('.nav button')[5])">Manage Funding</button></div></div>
+</div>
+<div class="card"><h2>What needs your support?</h2>
+<div class="row"><span><b>Technology</b><br><small class="muted">Projects looking for tools, equipment or technical expertise.</small></span><span class="badge">5 projects</span></div>
+<div class="row"><span><b>Pilot Support</b><br><small class="muted">Projects ready to test solutions in the field.</small></span><span class="badge">3 projects</span></div>
+<div class="row"><span><b>Mentorship</b><br><small class="muted">Student teams looking for industry guidance.</small></span><span class="badge">7 teams</span></div>
+<div class="row"><span><b>Funding</b><br><small class="muted">Projects seeking financial support for implementation.</small></span><span class="badge">4 projects</span></div>
+</div>`;
+}
+
+function opportunityRows(list){
+return list.map(x=>`<div class="card"><div class="row" style="padding-top:0">
+<span><h3>${x.name}</h3><small class="muted">${x.district} · ${x.category} · Deadline: ${x.deadline}</small></span>
+<span class="badge green">${x.match}% match</span></div>
+<p class="help"><b>Looking for:</b> ${x.need}</p>
+<div class="actions"><button class="btn primary" onclick="applyOpportunity('${x.name}')">Express Interest</button><button class="btn" onclick="alert('Demo: Opportunity details opened')">View Details</button></div></div>`).join("")||'<div class="card">No opportunities found.</div>';
+}
+function opportunitiesSection(){
+return `<div class="head"><div><h1>Opportunities</h1><p class="muted">Browse challenges where your company can contribute technology, expertise, pilots or funding.</p></div></div>
+<div class="filters"><input id="oppSearch" placeholder="Search project, district or category..." oninput="filterOpportunities()">
+<select id="oppCategory" onchange="filterOpportunities()"><option value="">All categories</option><option>Water</option><option>Energy</option><option>Agriculture</option><option>Sanitation</option></select>
+<select id="oppSupport" onchange="filterOpportunities()"><option value="">All support types</option><option>Technology</option><option>Mentorship</option><option>Pilot</option><option>Funding</option></select></div>
+<div id="oppList">${opportunityRows(opportunities)}</div>`;
+}
+function filterOpportunities(){
+const q=document.getElementById("oppSearch").value.toLowerCase(),c=document.getElementById("oppCategory").value,s=document.getElementById("oppSupport").value;
+const list=opportunities.filter(x=>(!q||(x.name+x.district+x.category).toLowerCase().includes(q))&&(!c||x.category===c)&&(!s||x.need.toLowerCase().includes(s.toLowerCase())));
+document.getElementById("oppList").innerHTML=opportunityRows(list);
+}
+function applyOpportunity(name){alert("Demo: Interest recorded for "+name+". The collaboration request is now pending review.");}
+
+function recommendedSection(){
+return `<div class="head"><div><h1>Recommended Projects</h1><p class="muted">Projects ranked by how closely they match your company's capabilities.</p></div></div>
+<div class="notice">Higher match percentages mean the project requirements are closer to the capabilities saved in your industry profile.</div>
+<div class="card">${projects.map(x=>`<div class="progress-row"><div><b>${x.name}</b><span><b>${x.match}% match</b></span></div>
+<small class="muted">${x.university} · ${x.district} · ${x.stage} · Needs: ${x.need}</small>
+<div class="progress"><span style="width:${x.match}%"></span></div>
+<div class="actions"><button class="btn primary" onclick="applyOpportunity('${x.name}')">Explore Project</button><button class="btn" onclick="alert('Demo: Project requirements opened')">View Requirements</button></div></div>`).join("")}</div>`;
+}
+
+function collaborationsSection(){
+return `<div class="head"><div><h1>Collaborations</h1><p class="muted">Track projects where your company is already working with universities or teams.</p></div><button class="btn primary" onclick="showSection('opportunities',document.querySelectorAll('.nav button')[1])">+ Start Collaboration</button></div>
+<div class="filters"><input id="collabSearch" placeholder="Search collaboration..." oninput="filterCollaborations()"><select id="collabStatus" onchange="filterCollaborations()"><option value="">All statuses</option><option>Active</option><option>Pending</option></select></div>
+<div class="card" id="collabList">${collaborationRows(collaborations)}</div>`;
+}
+function collaborationRows(list){
+return list.map(x=>`<div class="row"><span><b>${x.name}</b><br><small class="muted">${x.partner} · ${x.role} · Next: ${x.next} · ${x.date}</small></span><span><span class="badge ${x.status==="Pending"?"orange":"green"}">${x.status}</span><br><button class="btn small-btn" style="margin-top:7px" onclick="alert('Demo: Collaboration details opened')">Open</button></span></div>`).join("");
+}
+function filterCollaborations(){
+const q=document.getElementById("collabSearch").value.toLowerCase(),s=document.getElementById("collabStatus").value;
+document.getElementById("collabList").innerHTML=collaborationRows(collaborations.filter(x=>(x.name+x.partner+x.role).toLowerCase().includes(q)&&(!s||x.status===s)));
+}
+
+function mentorshipSection(){
+return `<div class="head"><div><h1>Mentorship</h1><p class="muted">Offer industry knowledge to student teams and faculty working on real-world projects.</p></div><button class="btn primary" onclick="alert('Demo: New mentorship offer created')">+ Offer Mentorship</button></div>
+<div class="grid">
+<div class="card metric"><small>Active Teams</small><strong>6</strong><small>Receiving guidance</small></div>
+<div class="card metric"><small>Sessions This Month</small><strong>7</strong><small>Completed / planned</small></div>
+<div class="card metric"><small>Available Mentors</small><strong>3</strong><small>From your company</small></div>
+<div class="card metric"><small>Hours Contributed</small><strong>42</strong><small>This quarter</small></div>
+</div>
+<div class="card"><h2>Mentorship Activities</h2>
+${mentors.map(x=>`<div class="row"><span><b>${x.name}</b><br><small class="muted">${x.area} · ${x.teams} team(s) · Next: ${x.next}</small></span><span><span class="badge ${x.status==="Available"?"orange":"green"}">${x.status}</span><br><button class="btn small-btn" style="margin-top:7px" onclick="alert('Demo: Mentorship session opened')">${x.status==="Available"?"Assign Team":"View Sessions"}</button></span></div>`).join("")}</div>
+<div class="card"><h2>Create a Mentorship Offer</h2><form onsubmit="event.preventDefault();alert('Demo: Mentorship offer submitted.')">
+<div class="form-grid"><div class="field"><label>Expertise area</label><select><option>Technology</option><option>Product Design</option><option>Business</option><option>Manufacturing</option><option>Deployment</option></select></div>
+<div class="field"><label>Available hours per month</label><input type="number" value="4" min="1"></div>
+<div class="field full"><label>What can you help with?</label><textarea placeholder="Example: IoT architecture, product testing, market readiness..."></textarea></div></div>
+<button class="btn primary">Submit Offer</button></form></div>`;
+}
+
+function fundingSection(){
+return `<div class="head"><div><h1>Funding</h1><p class="muted">Manage financial support your company offers to innovation projects.</p></div><button class="btn primary" onclick="alert('Demo: New funding commitment workflow opened')">+ Offer Funding</button></div>
+<div class="grid">
+<div class="card metric"><small>Total Offered</small><strong>₹18L</strong><small>Current commitments</small></div>
+<div class="card metric"><small>Approved</small><strong>₹13L</strong><small>2 projects</small></div>
+<div class="card metric"><small>Under Review</small><strong>₹5L</strong><small>1 proposal</small></div>
+<div class="card metric"><small>Projects Supported</small><strong>3</strong><small>This year</small></div>
+</div>
+<div class="card"><h2>Funding Commitments</h2>
+${funding.map(x=>`<div class="row"><span><b>${x.name}</b><br><small class="muted">${x.type} · ${x.stage} · Deadline: ${x.deadline}</small></span><span><b>${x.amount}</b><br><span class="badge ${x.status==="Under Review"?"orange":"green"}">${x.status}</span></span></div>`).join("")}</div>
+<div class="card"><h2>Offer New Funding</h2><form onsubmit="event.preventDefault();alert('Demo: Funding offer submitted.')">
+<div class="form-grid"><div class="field"><label>Project</label><select>${projects.map(x=>`<option>${x.name}</option>`).join("")}</select></div>
+<div class="field"><label>Support type</label><select><option>Pilot Funding</option><option>Grant</option><option>Equipment</option><option>Technology Support</option></select></div>
+<div class="field"><label>Amount</label><input placeholder="₹ amount"></div>
+<div class="field"><label>Expected timeline</label><input type="date"></div>
+<div class="field full"><label>Funding notes</label><textarea placeholder="Mention conditions, milestones or intended use."></textarea></div></div>
+<button class="btn primary">Submit Funding Offer</button></form></div>`;
+}
+
+function profileSection(){
+return `<div class="head"><div><h1>My Profile</h1><p class="muted">Keep your company capabilities updated so COLLABX can find relevant projects.</p></div></div>
+<div class="card"><form onsubmit="event.preventDefault();alert('Company profile saved successfully.')">
+<div class="form-grid">
+<div class="field"><label>Company / Organization name</label><input value="Demo Industry Solutions"></div>
+<div class="field"><label>Industry sector</label><select><option>Technology</option><option>Agriculture</option><option>Energy</option><option>Water</option><option>Manufacturing</option><option>Infrastructure</option></select></div>
+<div class="field"><label>Contact person</label><input value="Industry Coordinator"></div>
+<div class="field"><label>Official email</label><input type="email" value="partner@industry-demo.in"></div>
+<div class="field"><label>Phone number</label><input value="+91 90000 00000"></div>
+<div class="field"><label>Operating districts</label><input value="Ranchi, Gumla, Latehar, Simdega"></div>
+<div class="field full"><label>Company capabilities</label><textarea>IoT, field deployment, product testing, technical mentorship and pilot implementation.</textarea></div>
+<div class="field full"><label>Areas where you want to contribute</label>
+<div class="capabilities"><span class="cap">Technology</span><span class="cap">Mentorship</span><span class="cap">Pilot Projects</span><span class="cap">Funding</span><span class="cap">Equipment</span><span class="cap">Implementation</span></div></div>
+</div>
+<h3>Notifications</h3>
+<label class="check"><input type="checkbox" checked> Notify me about high-match projects</label>
+<label class="check"><input type="checkbox" checked> Notify me about collaboration requests</label>
+<label class="check"><input type="checkbox" checked> Notify me about mentorship opportunities</label>
+<label class="check"><input type="checkbox" checked> Notify me about funding requests</label>
+<div class="actions"><button class="btn primary">Save Changes</button></div>
+</form></div>`;
+}
+
+showSection("dashboard",document.querySelector(".nav button"));
+</script>
+</body>
+</html>

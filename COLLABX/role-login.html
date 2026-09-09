@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>COLLABX — Login</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#f5f7fb;font-family:Inter,Segoe UI,Arial,sans-serif;color:#172033}
+.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.box{width:min(470px,100%);background:#fff;border:1px solid #e2e7ef;border-radius:17px;padding:35px;box-shadow:0 18px 50px rgba(16,24,40,.09)}
+.brand{font-size:27px;font-weight:850}.muted{color:#667085}
+.role{margin:24px 0;padding:15px;background:#f7f9fc;border-radius:10px}
+.role small{color:#667085;font-size:11px}.role h2{margin:6px 0 0}
+.field{margin:14px 0}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:7px}
+input{width:100%;padding:12px;border:1px solid #d9dee8;border-radius:8px}
+.btn{width:100%;padding:12px;border-radius:8px;border:1px solid #d9dee8;background:#fff;font-weight:750;margin-top:11px}
+.primary{background:#2457d6;color:#fff;border-color:#2457d6}
+.back{text-align:center;margin-top:16px;color:#667085;font-size:12px;cursor:pointer}
+</style></head><body><div class="wrap"><div class="box">
+<div class="brand">COLLABX</div>
+<div class="role"><small>SELECTED ROLE</small><h2 id="title">Login</h2><p id="desc" class="muted"></p></div>
+<form onsubmit="event.preventDefault();login()"><div class="field"><label>Email</label><input id="email" type="email" required placeholder="name@example.com"></div>
+<div class="field"><label>Password</label><input id="password" type="password" required placeholder="••••••••"></div>
+<button class="btn primary">Login</button></form>
+<button class="btn" onclick="signup()">Sign Up / Create Account</button>
+<div class="back" onclick="location.href='index.html'">← Change Role</div>
+</div></div>
+<script>
+const role=new URLSearchParams(location.search).get('role');
+const data={
+ citizen:['Citizen','citizen.html','Citizen'],
+ government:['Government','government.html','Government'],
+ industry:['Industry','industry.html','Industry'],
+ 'platform-admin':['Platform Admin','platform-admin.html','Platform Admin']
+};
+const x=data[role];
+if(!x){location.href='index.html';}
+document.getElementById('title').textContent=x[0]+' Login';
+document.getElementById('desc').textContent='Sign in to the '+x[0]+' portal.';
+function login(){sessionStorage.setItem('collabxLoggedIn','true');sessionStorage.setItem('collabxRole',x[2]);location.href=x[1];}
+function signup(){location.href='signup.html?role='+encodeURIComponent(x[2]);}
+</script></body></html>

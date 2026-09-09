@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>COLLABX — Sign Up</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#f5f7fb;font-family:Inter,Segoe UI,Arial,sans-serif;color:#172033}
+.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.box{width:min(470px,100%);background:#fff;border:1px solid #e2e7ef;border-radius:17px;padding:35px;box-shadow:0 18px 50px rgba(16,24,40,.09)}
+.brand{font-size:27px;font-weight:850}.muted{color:#667085}
+.role{margin:24px 0;padding:15px;background:#f7f9fc;border-radius:10px}
+.role small{color:#667085;font-size:11px}.role h2{margin:6px 0 0}
+.field{margin:14px 0}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:7px}
+input{width:100%;padding:12px;border:1px solid #d9dee8;border-radius:8px}
+.btn{width:100%;padding:12px;border-radius:8px;border:1px solid #d9dee8;background:#fff;font-weight:750;margin-top:11px}
+.primary{background:#2457d6;color:#fff;border-color:#2457d6}
+.back{text-align:center;margin-top:16px;color:#667085;font-size:12px;cursor:pointer}
+</style></head><body><div class="wrap"><div class="box">
+<div class="brand">COLLABX</div><h1>Create Account</h1>
+<div class="role"><small>ACCOUNT TYPE</small><h2 id="role"></h2></div>
+<form onsubmit="event.preventDefault();createAccount()">
+<div class="field"><label>Full Name</label><input required placeholder="Your name"></div>
+<div class="field"><label>Email</label><input type="email" required placeholder="name@example.com"></div>
+<div class="field"><label>Password</label><input type="password" required placeholder="Create password"></div>
+<div class="field"><label>Organization / Institution</label><input placeholder="Optional"></div>
+<button class="btn primary">Create Account</button></form>
+<button class="btn" onclick="history.back()">← Back to Login</button>
+</div></div><script>
+const q=new URLSearchParams(location.search);const r=q.get('role')||'Citizen';document.getElementById('role').textContent=r;
+function createAccount(){alert('Demo account created successfully. Please use Login to continue.');history.back();}
+</script></body></html>

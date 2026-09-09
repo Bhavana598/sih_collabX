@@ -1,0 +1,1469 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>COLLABX — University Admin Dashboard</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  background:#f5f7fb;
+  color:#172033;
+}
+
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+
+.portal{
+  min-height:100vh;
+  display:flex;
+}
+
+/* SIDEBAR */
+.side{
+  width:250px;
+  background:#101828;
+  color:#fff;
+  padding:22px 14px;
+  position:fixed;
+  inset:0 auto 0 0;
+  overflow-y:auto;
+}
+
+.logo{
+  font-size:24px;
+  font-weight:850;
+  padding:0 12px;
+}
+
+.tag{
+  font-size:11px;
+  color:#98a2b3;
+  padding:5px 12px 25px;
+}
+
+.nav button{
+  display:block;
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#cbd5e1;
+  text-align:left;
+  padding:11px 12px;
+  border-radius:8px;
+  margin:3px 0;
+}
+
+.nav button.active,
+.nav button:hover{
+  background:#1d2939;
+  color:#fff;
+}
+
+.user{
+  margin-top:25px;
+  background:#182230;
+  border:1px solid #293548;
+  border-radius:9px;
+  padding:12px;
+  font-size:12px;
+}
+
+.user small{
+  color:#98a2b3;
+}
+
+.user button{
+  width:100%;
+  margin-top:9px;
+  padding:7px;
+  border:1px solid #344054;
+  background:transparent;
+  color:#fff;
+  border-radius:7px;
+}
+
+/* MAIN */
+.main{
+  margin-left:250px;
+  width:calc(100% - 250px);
+}
+
+header{
+  height:66px;
+  background:#fff;
+  border-bottom:1px solid #e5e9f0;
+  padding:0 30px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+
+.content{
+  padding:30px;
+  max-width:1400px;
+  margin:auto;
+}
+
+.head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:20px;
+  margin-bottom:22px;
+}
+
+h1{
+  margin:0 0 5px;
+  font-size:27px;
+}
+
+h2{
+  font-size:18px;
+  margin-top:0;
+}
+
+h3{
+  font-size:15px;
+}
+
+.muted{
+  color:#667085;
+}
+
+/* BUTTONS */
+.btn{
+  padding:10px 15px;
+  border-radius:8px;
+  border:1px solid #d9dee8;
+  background:#fff;
+  font-weight:700;
+}
+
+.primary{
+  background:#2457d6;
+  color:#fff;
+  border-color:#2457d6;
+}
+
+.success{
+  background:#067647;
+  color:#fff;
+  border-color:#067647;
+}
+
+.danger{
+  background:#b42318;
+  color:#fff;
+  border-color:#b42318;
+}
+
+/* CARDS */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin-bottom:18px;
+}
+
+.card{
+  background:#fff;
+  border:1px solid #e3e8ef;
+  border-radius:11px;
+  padding:18px;
+  box-shadow:0 7px 22px rgba(16,24,40,.04);
+}
+
+.metric small{
+  color:#667085;
+}
+
+.metric strong{
+  display:block;
+  font-size:27px;
+  margin:8px 0;
+}
+
+.two{
+  display:grid;
+  grid-template-columns:1.25fr .75fr;
+  gap:18px;
+}
+
+/* ROW */
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:18px;
+  padding:13px 0;
+  border-bottom:1px solid #e5e9f0;
+}
+
+.row:last-child{
+  border-bottom:0;
+}
+
+.badge{
+  background:#eef2ff;
+  color:#3547a6;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:750;
+  white-space:nowrap;
+}
+
+.badge.green{
+  background:#ecfdf3;
+  color:#067647;
+}
+
+.badge.orange{
+  background:#fff7ed;
+  color:#c2410c;
+}
+
+.badge.red{
+  background:#fef3f2;
+  color:#b42318;
+}
+
+/* TABLE */
+.table-wrap{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,td{
+  text-align:left;
+  padding:12px;
+  border-bottom:1px solid #e5e9f0;
+  font-size:13px;
+}
+
+th{
+  color:#667085;
+  font-size:11px;
+  text-transform:uppercase;
+}
+
+/* FORMS */
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.field{
+  margin-bottom:14px;
+}
+
+.field label{
+  display:block;
+  font-size:12px;
+  font-weight:750;
+  margin-bottom:6px;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  padding:10px;
+  border:1px solid #d9dee8;
+  border-radius:8px;
+  background:#fff;
+}
+
+textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+/* FILTERS */
+.filters{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:10px;
+  margin-bottom:15px;
+}
+
+/* QUICK ACTIONS */
+.quick{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:12px;
+}
+
+.quick button{
+  padding:11px;
+  border:1px solid #dfe5ee;
+  background:#fff;
+  border-radius:8px;
+  text-align:left;
+  font-weight:650;
+}
+
+.quick button:hover{
+  border-color:#2457d6;
+}
+
+/* INFO */
+.info{
+  padding:12px;
+  background:#f7f9fc;
+  border-radius:8px;
+  margin:10px 0;
+  font-size:13px;
+}
+
+.empty{
+  text-align:center;
+  padding:30px;
+  color:#667085;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+
+  .grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .two{
+    grid-template-columns:1fr;
+  }
+
+  .form-grid,
+  .filters{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:650px){
+
+  .portal{
+    display:block;
+  }
+
+  .side{
+    position:static;
+    width:100%;
+  }
+
+  .main{
+    margin:0;
+    width:100%;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .content{
+    padding:16px;
+  }
+
+  header{
+    padding:0 16px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="portal">
+
+<!-- SIDEBAR -->
+<aside class="side">
+
+  <div class="logo">COLLABX</div>
+
+  <div class="tag">
+    Community → Collaborative Innovation
+  </div>
+
+  <div class="nav">
+
+    <button class="active"
+      onclick="showSection(this,'Dashboard')">
+      🏠 Dashboard
+    </button>
+
+    <button onclick="showSection(this,'Recommended Challenges')">
+      🔎 Recommended Challenges
+    </button>
+
+    <button onclick="showSection(this,'Accepted Challenges')">
+      ✅ Accepted Challenges
+    </button>
+
+    <button onclick="showSection(this,'Projects')">
+      📁 Projects
+    </button>
+
+    <button onclick="showSection(this,'Teams')">
+      👥 Teams
+    </button>
+
+    <button onclick="showSection(this,'Faculty')">
+      👨‍🏫 Faculty
+    </button>
+
+    <button onclick="showSection(this,'University Profile')">
+      🏫 University Profile
+    </button>
+
+  </div>
+
+  <div class="user">
+    <small>LOGGED IN AS</small><br>
+    <b>University Admin</b>
+
+    <button onclick="logout()">
+      Sign out
+    </button>
+  </div>
+
+</aside>
+
+
+<!-- MAIN -->
+<main class="main">
+
+<header>
+
+  <span>
+    University Admin /
+    <b id="crumb">Dashboard</b>
+  </span>
+
+  <button
+    class="btn primary"
+    onclick="showSection(null,'Recommended Challenges')">
+    Find Challenges
+  </button>
+
+</header>
+
+
+<div class="content" id="content">
+
+<!-- DASHBOARD -->
+
+<div class="head">
+  <div>
+    <h1>University Dashboard</h1>
+    <p class="muted">
+      Manage your university's challenges, projects, students and faculty.
+    </p>
+  </div>
+</div>
+
+
+<div class="grid">
+
+  <div class="card metric">
+    <small>Recommended Challenges</small>
+    <strong>18</strong>
+    <small>Good matches for your university</small>
+  </div>
+
+  <div class="card metric">
+    <small>Accepted Challenges</small>
+    <strong>7</strong>
+    <small>Challenges your university accepted</small>
+  </div>
+
+  <div class="card metric">
+    <small>Active Projects</small>
+    <strong>12</strong>
+    <small>Currently running</small>
+  </div>
+
+  <div class="card metric">
+    <small>Student Teams</small>
+    <strong>24</strong>
+    <small>Active teams</small>
+  </div>
+
+</div>
+
+
+<div class="two">
+
+<div class="card">
+
+  <h2>Recent Activity</h2>
+
+  <div class="row">
+    <span>
+      <b>Farm Irrigation Challenge</b><br>
+      <small class="muted">
+        New challenge recommended
+      </small>
+    </span>
+
+    <span class="badge">
+      NEW
+    </span>
+  </div>
+
+  <div class="row">
+    <span>
+      <b>Solar Microgrid Project</b><br>
+      <small class="muted">
+        Project accepted
+      </small>
+    </span>
+
+    <span class="badge green">
+      ACCEPTED
+    </span>
+  </div>
+
+  <div class="row">
+    <span>
+      <b>Water Quality Team</b><br>
+      <small class="muted">
+        New student team created
+      </small>
+    </span>
+
+    <span class="badge">
+      ACTIVE
+    </span>
+  </div>
+
+</div>
+
+
+<div class="card">
+
+  <h2>Quick Actions</h2>
+
+  <p class="muted">
+    Common tasks for university administrators.
+  </p>
+
+  <div class="quick">
+
+    <button onclick="showSection(null,'Recommended Challenges')">
+      🔎 Find Challenges
+    </button>
+
+    <button onclick="showSection(null,'Accepted Challenges')">
+      ✅ View Accepted
+    </button>
+
+    <button onclick="showSection(null,'Projects')">
+      📁 Manage Projects
+    </button>
+
+    <button onclick="showSection(null,'Teams')">
+      👥 View Teams
+    </button>
+
+  </div>
+
+</div>
+
+</div>
+
+</div>
+
+</main>
+</div>
+
+
+<script>
+
+/* LOGOUT */
+
+function logout(){
+
+  sessionStorage.clear();
+
+  location.href="index.html";
+
+}
+
+
+/* NAVIGATION */
+
+function showSection(btn,name){
+
+  if(btn){
+
+    document
+      .querySelectorAll(".nav button")
+      .forEach(x=>x.classList.remove("active"));
+
+    btn.classList.add("active");
+
+  }
+
+  document.getElementById("crumb").textContent=name;
+
+  const content=document.getElementById("content");
+
+
+  /* RECOMMENDED CHALLENGES */
+
+  if(name==="Recommended Challenges"){
+
+    content.innerHTML=`
+
+      <div class="head">
+        <div>
+          <h1>Recommended Challenges</h1>
+          <p class="muted">
+            Challenges that match your university's skills and resources.
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+
+        <div class="filters">
+
+          <input
+            id="challengeSearch"
+            placeholder="Search challenges..."
+            oninput="filterChallenges()">
+
+          <select id="domainFilter" onchange="filterChallenges()">
+            <option value="">All domains</option>
+            <option>Agriculture</option>
+            <option>Water</option>
+            <option>Energy</option>
+            <option>Healthcare</option>
+            <option>Infrastructure</option>
+          </select>
+
+          <select id="matchFilter" onchange="filterChallenges()">
+            <option value="">Any match</option>
+            <option value="90">90%+ match</option>
+            <option value="80">80%+ match</option>
+          </select>
+
+        </div>
+
+        <div id="challengeList">
+
+          ${challengeRow(
+            "Smart Irrigation Monitoring",
+            "Agriculture",
+            "94%",
+            "Gumla",
+            "High"
+          )}
+
+          ${challengeRow(
+            "School Water Quality Monitor",
+            "Water",
+            "91%",
+            "Latehar",
+            "High"
+          )}
+
+          ${challengeRow(
+            "Solar Microgrid Reliability",
+            "Energy",
+            "89%",
+            "Simdega",
+            "Medium"
+          )}
+
+          ${challengeRow(
+            "Rural Health Monitoring",
+            "Healthcare",
+            "84%",
+            "Ranchi",
+            "Medium"
+          )}
+
+        </div>
+
+      </div>
+    `;
+
+    return;
+  }
+
+
+  /* ACCEPTED CHALLENGES */
+
+  if(name==="Accepted Challenges"){
+
+    content.innerHTML=`
+
+      <div class="head">
+        <div>
+          <h1>Accepted Challenges</h1>
+          <p class="muted">
+            Challenges your university has chosen to work on.
+          </p>
+        </div>
+
+        <button class="btn primary"
+          onclick="alert('Demo: Start a new project')">
+          + Start Project
+        </button>
+      </div>
+
+      <div class="card">
+
+        <div class="row">
+          <span>
+            <b>Solar Microgrid Reliability</b><br>
+            <small class="muted">
+              Simdega · Energy · Accepted 12 Aug
+            </small>
+          </span>
+
+          <span class="badge green">
+            PROJECT ACTIVE
+          </span>
+        </div>
+
+        <div class="row">
+          <span>
+            <b>Farm Irrigation Problems</b><br>
+            <small class="muted">
+              Gumla · Agriculture · Accepted 18 Aug
+            </small>
+          </span>
+
+          <span class="badge">
+            TEAM FORMING
+          </span>
+        </div>
+
+        <div class="row">
+          <span>
+            <b>School Water Access</b><br>
+            <small class="muted">
+              Latehar · Water · Accepted 21 Aug
+            </small>
+          </span>
+
+          <span class="badge orange">
+            PROJECT SETUP
+          </span>
+        </div>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  /* PROJECTS */
+
+  if(name==="Projects"){
+
+    content.innerHTML=`
+
+      <div class="head">
+
+        <div>
+          <h1>Projects</h1>
+          <p class="muted">
+            Monitor projects created from accepted challenges.
+          </p>
+        </div>
+
+        <button class="btn primary"
+          onclick="alert('Demo: Create Project')">
+          + Create Project
+        </button>
+
+      </div>
+
+
+      <div class="card table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Project</th>
+              <th>Challenge</th>
+              <th>Faculty Mentor</th>
+              <th>Team</th>
+              <th>Progress</th>
+              <th>Status</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <tr>
+              <td><b>Smart Irrigation System</b></td>
+              <td>Farm Irrigation</td>
+              <td>Dr. Anil Kumar</td>
+              <td>Team Alpha</td>
+              <td>68%</td>
+              <td><span class="badge">IN PROGRESS</span></td>
+            </tr>
+
+            <tr>
+              <td><b>Water Quality Monitor</b></td>
+              <td>School Water</td>
+              <td>Dr. Priya Rao</td>
+              <td>Team Aqua</td>
+              <td>42%</td>
+              <td><span class="badge orange">TESTING</span></td>
+            </tr>
+
+            <tr>
+              <td><b>Solar Microgrid</b></td>
+              <td>Energy Reliability</td>
+              <td>Dr. Ravi Singh</td>
+              <td>Team Solar</td>
+              <td>91%</td>
+              <td><span class="badge green">DEPLOYMENT</span></td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  /* TEAMS */
+
+  if(name==="Teams"){
+
+    content.innerHTML=`
+
+      <div class="head">
+
+        <div>
+          <h1>Student Teams</h1>
+          <p class="muted">
+            See teams working on university projects.
+          </p>
+        </div>
+
+        <button class="btn primary"
+          onclick="alert('Demo: Create Team')">
+          + Create Team
+        </button>
+
+      </div>
+
+
+      <div class="grid">
+
+        <div class="card">
+
+          <h3>Team Alpha</h3>
+
+          <p class="muted">
+            Smart Irrigation System
+          </p>
+
+          <div class="info">
+            👥 5 students
+          </div>
+
+          <div class="info">
+            👨‍🏫 Mr. Naresh
+          </div>
+
+          <span class="badge green">
+            ACTIVE
+          </span>
+
+        </div>
+
+
+        <div class="card">
+
+          <h3>Team Aqua</h3>
+
+          <p class="muted">
+            Water Quality Monitor
+          </p>
+
+          <div class="info">
+            👥 4 students
+          </div>
+
+          <div class="info">
+            👨‍🏫 Mr. Naga Sriharsha
+          </div>
+
+          <span class="badge">
+            ACTIVE
+          </span>
+
+        </div>
+
+
+        <div class="card">
+
+          <h3>Team Solar</h3>
+
+          <p class="muted">
+            Solar Microgrid
+          </p>
+
+          <div class="info">
+            👥 6 students
+          </div>
+
+          <div class="info">
+            👨‍🏫 Mr. Sugunan
+          </div>
+
+          <span class="badge green">
+            DEPLOYMENT
+          </span>
+
+        </div>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  /* FACULTY */
+
+  if(name==="Faculty"){
+
+    content.innerHTML=`
+
+      <div class="head">
+
+        <div>
+          <h1>Faculty</h1>
+          <p class="muted">
+            Manage faculty members who mentor innovation projects.
+          </p>
+
+        </div>
+
+        <button class="btn primary"
+          onclick="alert('Demo: Add Faculty')">
+          + Add Faculty
+        </button>
+
+      </div>
+
+
+      <div class="card table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Faculty</th>
+              <th>Department</th>
+              <th>Skills</th>
+              <th>Projects</th>
+              <th>Status</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <tr>
+
+              <td>
+                <b>Mr. Naresh</b><br>
+                <small class="muted">
+                  naresh@university.edu
+                </small>
+              </td>
+
+              <td>Computer Science</td>
+
+              <td>IoT, AI</td>
+
+              <td>3</td>
+
+              <td>
+                <span class="badge green">
+                  ACTIVE
+                </span>
+              </td>
+
+            </tr>
+
+
+            <tr>
+
+              <td>
+                <b>Mr. Naga Sriharsha</b><br>
+                <small class="muted">
+                  harsha@university.edu
+                </small>
+              </td>
+
+              <td>Electronics</td>
+
+              <td>Sensors, Embedded</td>
+
+              <td>2</td>
+
+              <td>
+                <span class="badge green">
+                  ACTIVE
+                </span>
+              </td>
+
+            </tr>
+
+
+            <tr>
+
+              <td>
+                <b>Mr. Sugunan</b><br>
+                <small class="muted">
+                  sugunan@university.edu
+                </small>
+              </td>
+
+              <td>Electrical</td>
+
+              <td>Solar, Power Systems</td>
+
+              <td>4</td>
+
+              <td>
+                <span class="badge green">
+                  ACTIVE
+                </span>
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  /* UNIVERSITY PROFILE */
+
+  if(name==="University Profile"){
+
+    content.innerHTML=`
+
+      <div class="head">
+
+        <div>
+
+          <h1>University Profile</h1>
+
+          <p class="muted">
+            Keep your university information up to date.
+          </p>
+
+        </div>
+
+        <button class="btn primary"
+          onclick="saveProfile()">
+          Save Changes
+        </button>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="field">
+
+            <label>University Name</label>
+
+            <input
+              id="universityName"
+              value="BVRIT Hyderabad College of Engineering for Women">
+
+          </div>
+
+
+          <div class="field">
+
+            <label>University Email</label>
+
+            <input
+              id="universityEmail"
+              value="admin@bvrit.edu.in">
+
+          </div>
+
+
+          <div class="field">
+
+            <label>City</label>
+
+            <input
+              id="city"
+              value="Ranchi">
+
+          </div>
+
+
+          <div class="field">
+
+            <label>State</label>
+
+            <input
+              id="state"
+              value="Jharkhand">
+
+          </div>
+
+
+          <div class="field">
+
+            <label>Departments</label>
+
+            <input
+              id="departments"
+              value="CSE, ECE, EEE, AIML, Mech, Civil">
+
+          </div>
+
+
+          <div class="field">
+
+            <label>Student Strength</label>
+
+            <input
+              id="students"
+              value="4500">
+
+          </div>
+
+        </div>
+
+
+        <div class="field">
+
+          <label>University Description</label>
+
+          <textarea id="description">University focused on technology, engineering and community innovation.</textarea>
+
+        </div>
+
+
+        <div class="info">
+
+          <b>Tip:</b>
+          Accurate university information helps COLLABX recommend better challenges and collaboration opportunities.
+
+        </div>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  /* DASHBOARD */
+
+  content.innerHTML=`
+
+    <div class="head">
+
+      <div>
+
+        <h1>University Dashboard</h1>
+
+        <p class="muted">
+          Manage your university's challenges, projects, students and faculty.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="grid">
+
+      <div class="card metric">
+        <small>Recommended Challenges</small>
+        <strong>18</strong>
+        <small>Good matches</small>
+      </div>
+
+      <div class="card metric">
+        <small>Accepted Challenges</small>
+        <strong>7</strong>
+        <small>Currently adopted</small>
+      </div>
+
+      <div class="card metric">
+        <small>Active Projects</small>
+        <strong>12</strong>
+        <small>Currently running</small>
+      </div>
+
+      <div class="card metric">
+        <small>Student Teams</small>
+        <strong>24</strong>
+        <small>Active teams</small>
+      </div>
+
+    </div>
+
+
+    <div class="two">
+
+      <div class="card">
+
+        <h2>Recent Activity</h2>
+
+        <div class="row">
+
+          <span>
+            <b>Farm Irrigation Challenge</b><br>
+            <small class="muted">
+              New challenge recommended
+            </small>
+          </span>
+
+          <span class="badge">
+            NEW
+          </span>
+
+        </div>
+
+
+        <div class="row">
+
+          <span>
+            <b>Solar Microgrid Project</b><br>
+            <small class="muted">
+              Project accepted
+            </small>
+          </span>
+
+          <span class="badge green">
+            ACCEPTED
+          </span>
+
+        </div>
+
+
+        <div class="row">
+
+          <span>
+            <b>Water Quality Team</b><br>
+            <small class="muted">
+              New team created
+            </small>
+          </span>
+
+          <span class="badge">
+            ACTIVE
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Quick Actions</h2>
+
+        <p class="muted">
+          Common university tasks.
+        </p>
+
+        <div class="quick">
+
+          <button onclick="showSection(null,'Recommended Challenges')">
+            🔎 Find Challenges
+          </button>
+
+          <button onclick="showSection(null,'Accepted Challenges')">
+            ✅ Accepted Challenges
+          </button>
+
+          <button onclick="showSection(null,'Projects')">
+            📁 Manage Projects
+          </button>
+
+          <button onclick="showSection(null,'Teams')">
+            👥 View Teams
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* CHALLENGE ROW */
+
+function challengeRow(title,domain,match,location,priority){
+
+  return `
+
+    <div
+      class="row challenge"
+      data-domain="${domain}"
+      data-match="${parseInt(match)}">
+
+      <span>
+
+        <b>${title}</b><br>
+
+        <small class="muted">
+          ${location} · ${domain}
+        </small>
+
+      </span>
+
+      <span>
+
+        <span class="badge">
+          ${match} MATCH
+        </span>
+
+        <button
+          class="btn"
+          style="margin-left:8px"
+          onclick="viewChallenge('${title}')">
+          View
+        </button>
+
+      </span>
+
+    </div>
+
+  `;
+
+}
+
+
+/* FILTER */
+
+function filterChallenges(){
+
+  const search=
+    document
+      .getElementById("challengeSearch")
+      .value
+      .toLowerCase();
+
+  const domain=
+    document
+      .getElementById("domainFilter")
+      .value;
+
+  const match=
+    parseInt(
+      document
+        .getElementById("matchFilter")
+        .value
+    ) || 0;
+
+
+  document
+    .querySelectorAll(".challenge")
+    .forEach(row=>{
+
+      const text=row.innerText.toLowerCase();
+
+      const rowDomain=row.dataset.domain;
+
+      const rowMatch=parseInt(row.dataset.match);
+
+      const visible=
+        text.includes(search) &&
+        (!domain || rowDomain===domain) &&
+        rowMatch>=match;
+
+      row.style.display=
+        visible ? "flex" : "none";
+
+    });
+
+}
+
+
+/* VIEW CHALLENGE */
+
+function viewChallenge(title){
+
+  alert(
+    "Demo Challenge\\n\\n"+
+    title+
+    "\\n\\n"+
+    "University capability match is high. "+
+    "You can review the problem details and accept it."
+  );
+
+}
+
+
+/* SAVE PROFILE */
+
+function saveProfile(){
+
+  alert(
+    "University profile saved successfully."
+  );
+
+}
+
+
+/* INITIAL DASHBOARD */
+
+</script>
+
+</body>
+</html>

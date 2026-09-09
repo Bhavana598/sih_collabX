@@ -1,0 +1,285 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>COLLABX — Select Role</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #f5f7fb;
+            font-family: Inter, Segoe UI, Arial, sans-serif;
+            color: #172033;
+        }
+
+        .wrap {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .box {
+            width: min(850px, 100%);
+            background: #fff;
+            border: 1px solid #e2e7ef;
+            border-radius: 17px;
+            padding: 35px;
+            box-shadow: 0 18px 50px rgba(16, 24, 40, 0.09);
+        }
+
+        .brand {
+            font-size: 27px;
+            font-weight: 850;
+        }
+
+        .muted {
+            color: #667085;
+        }
+
+        .role {
+            margin: 24px 0;
+            padding: 15px;
+            background: #f7f9fc;
+            border-radius: 10px;
+        }
+
+        .role small {
+            color: #667085;
+            font-size: 11px;
+        }
+
+        .role h2 {
+            margin: 6px 0 0;
+        }
+
+        .field {
+            margin: 14px 0;
+        }
+
+        .field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 750;
+            margin-bottom: 7px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d9dee8;
+            border-radius: 8px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #d9dee8;
+            background: #fff;
+            font-weight: 750;
+            margin-top: 11px;
+        }
+
+        .primary {
+            background: #2457d6;
+            color: #fff;
+            border-color: #2457d6;
+        }
+
+        .back {
+            text-align: center;
+            margin-top: 16px;
+            color: #667085;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .roles {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .role-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-align: left;
+            padding: 18px;
+            border: 1px solid #dfe5ee;
+            border-radius: 11px;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .role-card:hover {
+            border-color: #2457d6;
+            box-shadow: 0 6px 18px rgba(16, 24, 40, 0.08);
+        }
+
+        .icon {
+            font-size: 27px;
+        }
+
+        .role-card b {
+            display: block;
+        }
+
+        .role-card small {
+            display: block;
+            color: #667085;
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        .arrow {
+            margin-left: auto;
+            color: #98a2b3;
+            font-size: 20px;
+        }
+
+        .note {
+            margin-top: 20px;
+            padding: 13px;
+            background: #f7f9fc;
+            border-radius: 9px;
+            font-size: 12px;
+            color: #667085;
+        }
+
+        @media (max-width: 650px) {
+            .roles {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrap">
+        <div class="box">
+
+            <div class="brand">COLLABX</div>
+
+            <p class="muted">
+                Community → Collaborative Innovation Platform
+            </p>
+
+            <h1 style="margin-top: 32px;">
+                Choose your role
+            </h1>
+
+            <p class="muted">
+                Select a role first. You will then see the login / sign-up
+                page for that role.
+            </p>
+
+            <div class="roles">
+
+                <!-- Citizen -->
+                <button
+                    class="role-card"
+                    onclick="location.href='role-login.html?role=citizen'"
+                >
+                    <span class="icon">👤</span>
+
+                    <span>
+                        <b>Citizen</b>
+                        <small>
+                            Report local problems, track submissions
+                            and discover solutions.
+                        </small>
+                    </span>
+
+                    <span class="arrow">→</span>
+                </button>
+
+                <!-- Government -->
+                <button
+                    class="role-card"
+                    onclick="location.href='role-login.html?role=government'"
+                >
+                    <span class="icon">🏛️</span>
+
+                    <span>
+                        <b>Government</b>
+                        <small>
+                            Validate challenges, manage projects
+                            and monitor impact.
+                        </small>
+                    </span>
+
+                    <span class="arrow">→</span>
+                </button>
+
+                <!-- University -->
+                <button class="role-card" onclick="location.href='university.html'">
+                    <span class="icon">🎓</span>
+                    <span>
+                        <b>University</b>
+                        <small>Choose University Admin, Faculty or Student access.</small>
+                    </span>
+                    <span class="arrow">→</span>
+                </button>
+
+                <!-- Industry -->
+                <button
+                    class="role-card"
+                    onclick="location.href='role-login.html?role=industry'"
+                >
+                    <span class="icon">🏢</span>
+
+                    <span>
+                        <b>Industry</b>
+                        <small>
+                            Find opportunities, collaborate and
+                            support innovation.
+                        </small>
+                    </span>
+
+                    <span class="arrow">→</span>
+                </button>
+
+                <!-- Platform Admin -->
+                <button
+                    class="role-card"
+                    onclick="location.href='role-login.html?role=platform-admin'"
+                >
+                    <span class="icon">⚙️</span>
+
+                    <span>
+                        <b>Platform Admin</b>
+                        <small>
+                            Manage users, organizations, platform
+                            operations and audit.
+                        </small>
+                    </span>
+
+                    <span class="arrow">→</span>
+                </button>
+
+            </div>
+
+            <div class="note">
+                <b>University:</b>
+                selecting University first opens the Admin / Faculty /
+                Student selection. Login or Sign Up appears only after
+                choosing the university account type.
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
