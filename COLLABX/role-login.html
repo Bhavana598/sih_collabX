@@ -35,4 +35,7 @@ document.getElementById('title').textContent=x[0]+' Login';
 document.getElementById('desc').textContent='Sign in to the '+x[0]+' portal.';
 function login(){sessionStorage.setItem('SamyogLoggedIn','true');sessionStorage.setItem('SamyogRole',x[2]);location.href=x[1];}
 function signup(){location.href='signup.html?role='+encodeURIComponent(x[2]);}
-</script></body></html>
+</script>
+<script src="translator.js"></script>
+</body>
+</html>
